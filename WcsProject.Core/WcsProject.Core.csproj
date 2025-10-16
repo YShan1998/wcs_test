@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Furion.Pure" Version="4.9.7.129" />
+      <PackageReference Include="SqlSugarCore" Version="5.1.4.205" />
+    </ItemGroup>
+
+</Project>
