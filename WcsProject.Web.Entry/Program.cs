@@ -37,7 +37,6 @@ Serve.Run(RunOptions.Default
         builder.Services.Configure<SqlSugarOptions>(builder.Configuration.GetSection(SqlSugarOptions.SectionName));
 
         // Configure SqlSugar with SqlSugarScope (thread-safe singleton)
-        // builder.Services.ConfigureSqlSugar(builder.Configuration, builder.Environment);
         builder.Services.AddSingleton<ISqlSugarClient>(DbContext.Instance);
 
         // Register generic repository
@@ -62,25 +61,12 @@ Serve.Run(RunOptions.Default
                     app.Environment.IsDevelopment()))
                 try
                 {
-                    var connString = app.Configuration.GetConnectionString("defaultdb");
-                    if (string.IsNullOrEmpty(connString) || connString.Contains("NOT_SET"))
-                    {
-                        logger.LogError("Connection string not resolved. Value: {ConnectionString}",
-                            connString ?? "NULL");
-                        logger.LogError(
-                            "Check that Aspire AppHost is running and PostgreSQL reference is properly configured");
-                    }
-                    else
-                    {
-                        logger.LogInformation("Connection string resolved successfully");
-                    }
-
                     dbInitializer.InitializeAsync().Wait();
-                    app.Logger.LogInformation("Database initialized successfully");
+                    logger.LogInformation("Database initialized successfully");
                 }
                 catch (Exception ex)
                 {
-                    app.Logger.LogError(ex, "Database initialization failed");
+                    logger.LogError(ex, "Database initialization failed");
                     // Don't throw - allow app to start even if DB init fails
                 }
         }

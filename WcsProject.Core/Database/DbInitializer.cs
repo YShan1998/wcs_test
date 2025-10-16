@@ -39,7 +39,7 @@ public class DbInitializer : IDbInitializer, IScoped
                 DefaultDbScope.ConfigId);
 
             // Create database if not exists
-            if (!_db.DbMaintenance.IsAnyTable("storage_units", false))
+            if (!_db.DbMaintenance.IsAnyTable("storage_unit", false))
             {
                 _db.DbMaintenance.CreateDatabase();
                 _logger.LogInformation("Created database: {ConfigId}", DefaultDbScope.ConfigId);

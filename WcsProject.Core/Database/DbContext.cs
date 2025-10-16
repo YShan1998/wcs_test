@@ -13,6 +13,8 @@ public static class DbContext
         try
         {
             // Get SqlSugarOptions from appsettings.json
+            var configuration = App.GetService<IConfiguration>();
+            var logger = App.GetService<ILogger<object>>();
             var sqlSugarOptions = App.GetService<IOptions<SqlSugarOptions>>()?.Value ?? new SqlSugarOptions();
 
             // Build ConnectionConfigs from configuration
@@ -21,52 +23,54 @@ public static class DbContext
             {
                 ConfigId = DefaultDbScope.ConfigId,
                 DbType = DbType.PostgreSQL,
-                ConnectionString = App.GetService<IConfiguration>().GetConnectionString(DefaultDbScope.ConfigName),
+                ConnectionString = configuration.GetConnectionString(DefaultDbScope.ConfigName),
                 IsAutoCloseConnection = true,
-                InitKeyType = InitKeyType.Attribute
-            };
-            connectionConfigs.Add(defaultConnectionConfig);
-
-            // Include ConfigureExternalServices and MoreSettings for each ConnectionConfig
-            foreach (var connectionConfig in connectionConfigs)
-            {
-                connectionConfig.ConfigureExternalServices = new ConfigureExternalServices
+                InitKeyType = InitKeyType.Attribute,
+                
+                // Configure external services here
+                ConfigureExternalServices = new ConfigureExternalServices
                 {
-                    EntityService = (x, p) => //处理列名
+                    EntityService = (x, p) =>
                     {
-                        if (p.EntityName.ToLower().EndsWith("dto"))
+                        // Skip DTO classes
+                        if (String.IsNullOrEmpty(p.EntityName) || p.EntityName.ToLower().EndsWith("dto"))
                             return;
 
                         p.DbColumnName = UtilMethods.ToUnderLine(p.DbColumnName);
                     },
-                    EntityNameService = (x, p) => //处理表名
+                    EntityNameService = (x, p) =>
                     {
-                        if (p.EntityName.ToLower().EndsWith("dto"))
+                        // Skip DTO classes
+                        if (String.IsNullOrEmpty(p.EntityName) || p.EntityName.ToLower().EndsWith("dto"))
                             return;
 
                         p.DbTableName = UtilMethods.ToUnderLine(p.DbTableName);
                     }
-                };
-
-                connectionConfig.MoreSettings = new ConnMoreSettings
+                },
+                
+                // Configure MoreSettings here
+                MoreSettings = new ConnMoreSettings
                 {
                     IsAutoRemoveDataCache = sqlSugarOptions.IsAutoRemoveDataCache,
                     PgSqlIsAutoToLower = sqlSugarOptions.PgSqlIsAutoToLower,
                     EnableJsonb = sqlSugarOptions.EnableJsonb
-                };
-            }
+                }
+            };
+            connectionConfigs.Add(defaultConnectionConfig);
 
             var sqlSugarScope = new SqlSugarScope(connectionConfigs, db =>
             {
                 if (sqlSugarOptions.LogSqlExecuting)
                     db.Aop.OnLogExecuting = (sql, pars) =>
                     {
-                        // 集成 Aspire Dashboard 的日志
-                        var logger = App.GetService<ILogger<object>>();
-                        logger?.LogInformation("SQL Executing: {sql}, Parameters: {parameter}", sql,
-                            pars is { Length: > 0 }
-                                ? string.Join(", ", pars.Select(p => $"{p.ParameterName}={p.Value}"))
-                                : "");
+                        var logMessage = sql;
+                        if (pars is { Length: > 0 })
+                        {
+                            var parameters = string.Join(", ", 
+                                pars.Select(p => $"{p.ParameterName}={p.Value}"));
+                            logMessage += $", Parameters: {parameters}";
+                        }
+                        logger?.LogInformation("SQL Executing: {sql}", logMessage);
                     };
 
                 // Autofill audit fields

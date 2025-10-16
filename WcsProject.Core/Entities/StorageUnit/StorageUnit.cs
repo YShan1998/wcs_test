@@ -1,6 +1,6 @@
 ﻿namespace WcsProject.Core.Entities.Matrix;
 
-[SugarTable]
+[SugarTable("storage_unit")]
 public class StorageUnit : AuditEntity
 {
     [SugarColumn(Length = 10, IsNullable = false)]
