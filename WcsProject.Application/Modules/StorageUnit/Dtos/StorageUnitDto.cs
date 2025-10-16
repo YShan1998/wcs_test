@@ -2,5 +2,4 @@
 
 public class StorageUnitDto : Core.Entities.Matrix.StorageUnit
 {
-    
 }

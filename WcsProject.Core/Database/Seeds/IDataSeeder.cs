@@ -1,28 +1,28 @@
 ﻿using SqlSugar;
 
-namespace WcsProject.Application.Database.Seeds;
+namespace WcsProject.Core.Database.Seeds;
 
 public interface IDataSeeder
 {
     /// <summary>
-    /// Order in which this seeder should run (lower numbers run first)
+    ///     Order in which this seeder should run (lower numbers run first)
     /// </summary>
     int Order { get; }
-    
+
     /// <summary>
-    /// Name of the seeder for logging purposes
+    ///     Name of the seeder for logging purposes
     /// </summary>
     string Name { get; }
-    
+
     /// <summary>
-    /// Check if data already exists and seeding should be skipped
+    ///     Check if data already exists and seeding should be skipped
     /// </summary>
     /// <param name="db"></param>
     /// <returns></returns>
     Task<bool> ShouldSeedAsync(ISqlSugarClient db);
-    
+
     /// <summary>
-    /// Perform the actual data seeding
+    ///     Perform the actual data seeding
     /// </summary>
     /// <param name="db"></param>
     /// <returns></returns>

@@ -7,16 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WcsProject.Web.Core\WcsProject.Web.Core.csproj" />
-      <ProjectReference Include="..\WcsProject.ServiceDefaults\WcsProject.ServiceDefaults.csproj" />
+        <ProjectReference Include="..\WcsProject.Web.Core\WcsProject.Web.Core.csproj"/>
+        <ProjectReference Include="..\WcsProject.ServiceDefaults\WcsProject.ServiceDefaults.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
+        <Folder Include="Controllers\"/>
     </ItemGroup>
 
 </Project>

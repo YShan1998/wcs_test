@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-      <ProjectReference Include="..\WcsProject.Core\WcsProject.Core.csproj" />
-      <ProjectReference Include="..\WcsProject.Application\WcsProject.Application.csproj" />
+        <ProjectReference Include="..\WcsProject.Core\WcsProject.Core.csproj"/>
+        <ProjectReference Include="..\WcsProject.Application\WcsProject.Application.csproj"/>
     </ItemGroup>
 
     <PropertyGroup>

@@ -1,3 +1,5 @@
+using Projects;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 var postgres = builder.AddPostgres("postgres", port: 5632)
@@ -6,7 +8,7 @@ var postgres = builder.AddPostgres("postgres", port: 5632)
 
 var defaultDb = postgres.AddDatabase("defaultdb");
 
-builder.AddProject<Projects.WcsProject_Web_Entry>("api")
+builder.AddProject<WcsProject_Web_Entry>("api")
     .WithReference(defaultDb)
     .WithExternalHttpEndpoints();
 

@@ -2,7 +2,7 @@
 using SqlSugar;
 using WcsProject.Core.Entities.Matrix;
 
-namespace WcsProject.Application.Database.Seeds;
+namespace WcsProject.Core.Database.Seeds;
 
 public class StorageUnitSeeder : DataSeederBase
 {
@@ -12,25 +12,25 @@ public class StorageUnitSeeder : DataSeederBase
 
     public override int Order => 10; // Run early
     public override string Name => "Storage Units";
-    
+
     public override async Task<bool> ShouldSeedAsync(ISqlSugarClient db)
     {
         // Check if storage units already exist
         var count = await db.Queryable<StorageUnit>().CountAsync();
-        
+
         if (count > 0)
         {
             LogInfo($"Found {count} existing storage units, skipping seed");
             return false;
         }
-        
+
         return true;
     }
 
     public override async Task SeedAsync(ISqlSugarClient db)
     {
         LogInfo("Starting seed...");
-        
+
         var storageUnits = new List<StorageUnit>
         {
             new()
@@ -79,9 +79,9 @@ public class StorageUnitSeeder : DataSeederBase
                 IsDeleted = false
             }
         };
-        
+
         var count = await db.Insertable(storageUnits).ExecuteCommandAsync();
-        
+
         LogInfo($"Seeded {count} storage units");
     }
 }

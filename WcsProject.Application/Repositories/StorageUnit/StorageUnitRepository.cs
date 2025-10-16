@@ -1,15 +1,12 @@
-﻿using Furion.DependencyInjection;
-using SqlSugar;
+﻿namespace WcsProject.Application.Repositories.StorageUnit;
 
-namespace WcsProject.Application.Repositories.StorageUnit;
-
-public class StorageUnitRepository : BaseRepository<Core.Entities.Matrix.StorageUnit>, IStorageUnitRepository, ITransient
+public class StorageUnitRepository : BaseRepository<Core.Entities.Matrix.StorageUnit>, IStorageUnitRepository,
+    ITransient
 {
     public StorageUnitRepository(ISqlSugarClient context) : base(context)
     {
-        
     }
-    
+
     public async Task<Core.Entities.Matrix.StorageUnit> GetByCodeAsync(string code)
     {
         return await GetSingleAsync(x => x.Code == code);
@@ -22,7 +19,7 @@ public class StorageUnitRepository : BaseRepository<Core.Entities.Matrix.Storage
 
         if (excludeId.HasValue)
             query = query.Where(x => x.Id != excludeId.Value);
-        
+
         return await query.AnyAsync();
     }
 }

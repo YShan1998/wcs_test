@@ -1,12 +1,12 @@
 ﻿namespace WcsProject.Core.Options;
 
 /// <summary>
-/// SqlSugar configuration options
+///     SqlSugar configuration options
 /// </summary>
 public class SqlSugarOptions
 {
     public const string SectionName = "SqlSugar";
-    
+
     public bool IsAutoRemoveDataCache { get; set; } = true;
 
     public bool PgSqlIsAutoToLower { get; set; } = false;

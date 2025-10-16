@@ -1,13 +1,12 @@
 ﻿using Furion.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SqlSugar;
-using WcsProject.Application.Database.DbScopes;
-using WcsProject.Application.Database.Seeds;
+using WcsProject.Core.Database.DbScopes;
+using WcsProject.Core.Database.Seeds;
 using WcsProject.Core.Entities;
 using WcsProject.Core.Entities.Matrix;
 
-namespace WcsProject.Application.Database;
+namespace WcsProject.Core.Database;
 
 public interface IDbInitializer
 {
@@ -39,33 +38,30 @@ public class DbInitializer : IDbInitializer, IScoped
     {
         try
         {
-            _logger.LogInformation("Starting database initialization for {ConfigId}...", 
+            _logger.LogInformation("Starting database initialization for {ConfigId}...",
                 DefaultDbScope.ConfigId);
-            
+
             // Create database if not exists
             if (!_db.DbMaintenance.IsAnyTable("storage_units", false))
             {
                 _db.DbMaintenance.CreateDatabase();
                 _logger.LogInformation("Created database: {ConfigId}", DefaultDbScope.ConfigId);
             }
-            
+
             // Get all entity types from assembly
             var entityTypes = GetEntityTypes();
-            
+
             _logger.LogInformation("Found {Count} entity types to initialize", entityTypes.Length);
-            
+
             // Create tables
             _db.CodeFirst.InitTables(entityTypes);
-            
+
             _logger.LogInformation("Successfully initialized {Count} tables:", entityTypes.Length);
-            foreach (var type in entityTypes)
-            {
-                _logger.LogInformation("  ✓ {TableName}", type.Name);
-            }
-            
+            foreach (var type in entityTypes) _logger.LogInformation("  ✓ {TableName}", type.Name);
+
             // Seed initial data
             await SeedDataAsync();
-            
+
             _logger.LogInformation("Database initialization completed successfully");
         }
         catch (Exception ex)
@@ -78,26 +74,25 @@ public class DbInitializer : IDbInitializer, IScoped
     public async Task SeedDataAsync()
     {
         _logger.LogInformation("Starting data seeding...");
-        
+
         // Order seeders by their Order property
         var orderedSeeders = _seeders.OrderBy(s => s.Order).ToList();
-        
+
         _logger.LogInformation("Found {Count} seeders to execute", orderedSeeders.Count);
-        
+
         foreach (var seeder in orderedSeeders)
-        {
             try
             {
-                _logger.LogInformation("Checking seeder: {Name} (Order: {Order})", 
+                _logger.LogInformation("Checking seeder: {Name} (Order: {Order})",
                     seeder.Name, seeder.Order);
-                
+
                 // Check if seeding is needed
                 if (await seeder.ShouldSeedAsync(_db))
                 {
                     _logger.LogInformation("Executing seeder: {Name}", seeder.Name);
-                    
+
                     await seeder.SeedAsync(_db);
-                    
+
                     _logger.LogInformation("✓ Completed seeder: {Name}", seeder.Name);
                 }
                 else
@@ -110,8 +105,7 @@ public class DbInitializer : IDbInitializer, IScoped
                 _logger.LogError(ex, "Failed to execute seeder: {Name}", seeder.Name);
                 // Continue with other seeders even if one fails
             }
-        }
-        
+
         _logger.LogInformation("Data seeding completed");
     }
 
@@ -119,19 +113,17 @@ public class DbInitializer : IDbInitializer, IScoped
     {
         // 1. Get the assembly
         var assembly = typeof(StorageUnit).Assembly;
-        
+
         // 2. Get all types and filter
         var query = assembly.GetTypes()
-            .Where(t => 
-                t.IsClass &&                                    // Only classes
-                !t.IsAbstract &&                                // Only concrete (not abstract)
-                typeof(AuditEntity).IsAssignableFrom(t));        // Only inherits AuditEntity
+            .Where(t =>
+                t.IsClass && // Only classes
+                !t.IsAbstract && // Only concrete (not abstract)
+                typeof(AuditEntity).IsAssignableFrom(t)); // Only inherits AuditEntity
 
         if (!string.IsNullOrEmpty(namespaceFilter))
-        {
             query = query.Where(t => t.Namespace?.Contains(namespaceFilter) ?? false);
-        }
-        
+
         return query.ToArray();
     }
 }
