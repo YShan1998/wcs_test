@@ -1,6 +1,4 @@
-﻿using SqlSugar;
-
-namespace WcsProject.Core.Entities;
+﻿namespace WcsProject.Core.Entities;
 
 public abstract class AuditEntity
 {

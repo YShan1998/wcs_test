@@ -1,9 +1,4 @@
-﻿using Furion;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using SqlSugar;
-using WcsProject.Core.Database.DbScopes;
+﻿using WcsProject.Core.Database.DbScopes;
 using WcsProject.Core.Entities;
 using WcsProject.Core.Options;
 

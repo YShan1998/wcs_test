@@ -1,7 +1,4 @@
-﻿using Furion.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using SqlSugar;
-using WcsProject.Core.Database.DbScopes;
+﻿using WcsProject.Core.Database.DbScopes;
 using WcsProject.Core.Database.Seeds;
 using WcsProject.Core.Entities;
 using WcsProject.Core.Entities.Matrix;

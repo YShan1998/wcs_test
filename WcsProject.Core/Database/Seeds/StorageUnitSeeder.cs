@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using SqlSugar;
-using WcsProject.Core.Entities.Matrix;
+﻿using WcsProject.Core.Entities.Matrix;
 
 namespace WcsProject.Core.Database.Seeds;
 

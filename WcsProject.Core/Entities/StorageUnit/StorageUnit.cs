@@ -1,6 +1,4 @@
-﻿using SqlSugar;
-
-namespace WcsProject.Core.Entities.Matrix;
+﻿namespace WcsProject.Core.Entities.Matrix;
 
 [SugarTable]
 public class StorageUnit : AuditEntity

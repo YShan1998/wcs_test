@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using SqlSugar;
-
-namespace WcsProject.Core.Database.Seeds;
+﻿namespace WcsProject.Core.Database.Seeds;
 
 public abstract class DataSeederBase : IDataSeeder
 {
